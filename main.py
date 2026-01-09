@@ -10,7 +10,7 @@ def get_my_requests():
 
 @app.post("/requests")
 def send_prompt(
-    prompt: str = Body(embed=True)              
+    prompt: str = Body(embed=True) # body takes a JSON with a "prompt" field             
 ):
     answer = get_answer_from_gemini(prompt)
     return {"answer": answer}
