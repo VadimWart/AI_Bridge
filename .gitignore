@@ -14,3 +14,7 @@ wheels/
 
 # Configuration
 config.py
+
+# SQLite Datenbanken ignorieren
+*.db
+requests.db
