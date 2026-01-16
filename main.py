@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import Body, FastAPI, Request
-from db import Base, engine, get_user_requests
+from fastapi.middleware.cors import CORSMiddleware
+from db import Base, add_user_requests, engine, get_user_requests
 from gemini_client import get_answer_from_gemini
 
 
@@ -30,7 +31,22 @@ def get_my_requests(request: Request):
 
 @app.post("/requests")
 def send_prompt(
-    prompt: str = Body(embed=True) # body takes a JSON with a "prompt" field             
+    request: Request,
+    prompt: str = Body(embed=True), # body takes a JSON with a "prompt" field             
 ):
+    user_ip_address = request.client.host
     answer = get_answer_from_gemini(prompt)
+    add_user_requests(
+        ip_address=user_ip_address,
+        prompt=prompt,
+        response=answer
+    )
     return {"answer": answer}
+
+# CORS settings for local development
+app.add_middleware(CORSMiddleware,
+    allow_origins=["http://localhost:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
