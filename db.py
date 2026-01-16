@@ -18,3 +18,5 @@ class ChatRequest(Base):
     ip_address: Mapped[str] = mapped_column(index=True)
     prompt: Mapped[str]
     response: Mapped[str]
+
+    # Representation method for easier debugging
