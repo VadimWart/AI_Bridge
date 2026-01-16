@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 
 
@@ -20,3 +20,10 @@ class ChatRequest(Base):
     response: Mapped[str]
 
     # Representation method for easier debugging
+
+
+def get_user_requests(ip_address: str) -> list[ChatRequest]:
+    with session() as new_session:
+        query = select(ChatRequest).filter_by(ip_address=ip_address)
+        result = new_session.execute(query)
+        return result.scalars().all()
