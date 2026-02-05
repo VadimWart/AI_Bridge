@@ -18,3 +18,5 @@ config.py
 # SQLite Datenbanken ignorieren
 *.db
 requests.db
+
+GEMINI.md
