@@ -1,0 +1,12 @@
+{
+  "name": "ai-bridge-root",
+  "version": "1.0.0",
+  "scripts": {
+    "front": "npm run front --prefix frontend",
+    "back": "cd backend && ../.venv/bin/uvicorn main:app --reload --port 8009",
+    "dev": "concurrently \"npm run front\" \"npm run back\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
