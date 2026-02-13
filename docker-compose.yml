@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    container_name: ai-bridge-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Map the database to the outside so that chats are preserved,
+      # even if you delete the container.
+      - ./backend/requests.db:/app/requests.db
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: ai-bridge-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # Important: So that the frontend knows where the backend is
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: always
