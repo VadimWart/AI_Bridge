@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column, Session
 
 
 engine = create_engine(url="sqlite:///requests.db") 
@@ -22,18 +22,23 @@ class ChatRequest(Base):
     # Representation method for easier debugging
 
 
-def get_user_requests(ip_address: str) -> list[ChatRequest]:
-    with session() as new_session:
-        query = select(ChatRequest).filter_by(ip_address=ip_address)
-        result = new_session.execute(query)
-        return result.scalars().all()
 
-def add_user_requests(ip_address: str, prompt: str, response: str) -> None:
-    with session() as new_session:
-        new_request = ChatRequest(
-            ip_address=ip_address,
-            prompt=prompt,
-            response=response
-        )
-        new_session.add(new_request)
-        new_session.commit()
+# Generator for Dependency Injection
+def get_db():
+    with session() as db:
+        yield db
+
+def get_user_requests(db: Session, ip_address: str) -> list[ChatRequest]:
+    query = select(ChatRequest).filter_by(ip_address=ip_address)
+    result = db.execute(query)
+    return result.scalars().all()
+
+
+def add_user_requests(db: Session, ip_address: str, prompt: str, response: str) -> None:
+    new_request = ChatRequest(
+        ip_address=ip_address,
+        prompt=prompt,
+        response=response
+    )
+    db.add(new_request)
+    db.commit()
