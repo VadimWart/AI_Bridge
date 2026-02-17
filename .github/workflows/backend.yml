@@ -23,6 +23,9 @@ jobs:
       run:
         working-directory: ./backend
 
+    env:
+      PYTHONPATH: .
+
     steps:
       - uses: actions/checkout@v4
 
