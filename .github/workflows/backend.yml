@@ -18,6 +18,11 @@ on:
 jobs:
   backend-test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,4 +40,4 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Run Tests
-        run: uv run pytest backend/tests/
+        run: uv run pytest tests/ -v
